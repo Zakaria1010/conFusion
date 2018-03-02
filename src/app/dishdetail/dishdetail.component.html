@@ -1,0 +1,105 @@
+<div class="container"
+    fxLayout="row"
+    fxLayout.sm="column"
+    fxLayout.xs="column"
+    fxLayoutAlign.gt-md="space-around center"
+    fxLayoutGap="10px" 
+    fxLayoutGap.xs="0">
+
+  <div fxFlex="40" *ngIf= "dish">
+      <md-card>
+          <md-card-header>
+
+          <md-card-title>
+            <h3>{{ dish.name | uppercase }}</h3>
+          </md-card-title>
+
+         </md-card-header>
+
+          <img md-card-image src={{dish.image}} alt={{dish.image}}>
+          
+          <md-card-content>
+            <p>{{ dish.description }}</p>          
+          </md-card-content>
+
+          <md-card-actions>
+            <button md-button [routerLink]="['/dishdetail', prev]">
+             <span class="fa fa-chevron-left fa-lg"></span>
+            </button>
+            <button md-button (click)="goBack()">BACK</button>
+            <button md-button>Like</button>
+            <button md-button>Share</button>
+            <span class="flex-spacer"></span>
+            <button md-button [routerLink]="['/dishdetail', next]">
+              <span class="fa fa-chevron-right fa-lg"></span>
+             </button>
+          </md-card-actions>
+        </md-card>
+    <!-- <p>Display the details of the Dish here</p> -->
+  </div>
+
+  <div fxFlex="40" *ngIf= "dish" >
+  <md-list >     
+              <h3>Comments</h3>
+    
+      <md-list-item  *ngFor="let comment of dish.comments">
+          <h3 md-line> {{ comment.comment }} </h3>
+          <p md-line> {{comment.rating}} Stars </p>
+          <p md-line> -- {{ comment.author }} {{ comment.date  | date}} </p>
+      </md-list-item>
+         <!-- <p>Display the details of the Dish here</p> -->
+      <md-list-item> 
+          <div *ngIf="!(commentForm.invalid)">
+            <p md-line>{{commentForm.value.comment}} </p> 
+            <p md-line>{{commentForm.value.rating}} stars </p>
+            <p md-line> -- {{commentForm.value.author}}</p>
+          </div>  
+      </md-list-item>
+         <!-- <p>Display the details of the Dish here</p> -->
+    </md-list>
+
+   
+
+    <form novalidate [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+
+    <md-input-container class="full-width"
+    dividerColor="{{ formErrors.author ? 'warn':'primary'}}">
+      <input  mdInput formControlName="author" placeholder="Name" 
+      class="form-control" type="text" cols="100" [ngModel]="author" (keypress)="author=$event.target.value" >
+      <md-hint color="warn">
+          <span [hidden] = "!(formErrors.author)"> {{formErrors.author}} </span>
+      </md-hint>
+    </md-input-container> 
+
+      <td>
+        <md-slider mdInput
+        formControlName="rating" min="1" max="5" step="1"  thumbLabel tickInterval="1" 
+        value="5"></md-slider>
+      </td>
+
+        <p>
+        <md-input-container class="full-width"
+        dividerColor="{{ formErrors.comment ? 'warn':'primary' }}">
+          <textarea mdInput formControlName="comment" placeholder="Your Comment" rows="12" cols="100" 
+          class="form-control">
+        </textarea>
+          <md-hint color="warn">
+              <span [hidden] = "!(formErrors.comment)">{{formErrors.comment}}</span>
+          </md-hint>
+        </md-input-container>
+       </p>
+
+        <button type="submit" md-button class="background-primary text-florial-white" [disabled]="commentForm.invalid">Submit</button> 
+     </form>
+    </div>
+
+
+    <div [hidden]="dish">
+        <md-spinner></md-spinner>
+        <h4>Loading . . . Please Wait</h4>
+    </div>
+    
+  </div>
+
+
+
